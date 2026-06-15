@@ -1,0 +1,206 @@
+{
+  "version": "v1",
+  "stability": "append-only",
+  "provenance": {
+    "source_repo": "https://github.com/action-state-group/scitt-cose",
+    "release_tag": "v0.1.1",
+    "commit": "41811d1e3d9b32d000b1e7f26cafdb116f572167",
+    "upstream_path": "test-vectors/",
+    "note": "The v1/ bytes and SHA256SUMS in this directory are vendored byte-identical from the pinned source above; verify with `shasum -a 256 -c SHA256SUMS`. This manifest is a superset of the upstream manifest: the per-vector `expected` block below inlines the decoded protected-header expectations and negative-result codes for review convenience. The canonical per-vector source of truth remains each vector's expected.json (which is itself vendored and checksum-pinned)."
+  },
+  "leaf_entry_definition": "SHA-256 digest of the complete Signed Statement (COSE_Sign1) bytes, hex-encoded",
+  "tree_construction": "tree_size=8; statement digest at leaf_index=2; filler leaf i = SHA-256('scitt-cose test vectors v1 :: <vector-id> :: filler leaf <i>'); leaves in index order; RFC 9162 SHA-256 tree",
+  "vectors": [
+    {
+      "id": "valid-eddsa",
+      "dir": "v1/valid-eddsa",
+      "description": "Happy path: EdDSA Signed Statement + RFC9162_SHA256 receipt; everything verifies.",
+      "expected_result": "VALID",
+      "expected": {
+        "payload_sha256": "08b6e9ec3bd002da4e21976b6dc1411567d30acb30d671161583b3d8351e7692",
+        "protected_header": {
+          "statement": {
+            "alg": "EdDSA",
+            "alg_code": -8,
+            "content_type": "application/json",
+            "cwt_claims_label": 15,
+            "issuer": "https://test-vectors.scitt-cose.invalid",
+            "subject": "urn:scitt-cose:test-vectors:v1:valid-eddsa"
+          },
+          "receipt": {
+            "alg": "EdDSA",
+            "alg_code": -8,
+            "vds_label": 395,
+            "vds": 1
+          }
+        },
+        "leaf_entry": "a6dd4523ffdda1754c234acf209bdde758db7d30438468700a7bf6c01e800e3a",
+        "leaf_index": 2,
+        "tree_size": 8,
+        "inclusion_path": [
+          "d5790c062bb617c193f8dbedf90469ccf49525739238b6d1102df4d3424fbd44",
+          "fb85d1461099612b0a34168f8f207bc9a761a91cd1173f39c5dd7ca4d1d92a6c",
+          "b8e2ffb9ad6e45622e44393e6f58a747c4c5b3900d9676e3ecf50aab2ba266e4"
+        ],
+        "reconstructed_root": "5c834b80c0b40ca993f0b4a3ef9d2e77a8a3e8113358e4f318866c02cd448362",
+        "statement_signature_valid": true,
+        "receipt_valid": true,
+        "result": "VALID"
+      }
+    },
+    {
+      "id": "valid-es256",
+      "dir": "v1/valid-es256",
+      "description": "Happy path: ES256 Signed Statement + RFC9162_SHA256 receipt; everything verifies.",
+      "expected_result": "VALID",
+      "expected": {
+        "payload_sha256": "a55649d4e0674a1f2d043bc83945381dfd29d60e9ce63e4d86e945357451ff76",
+        "protected_header": {
+          "statement": {
+            "alg": "ES256",
+            "alg_code": -7,
+            "content_type": "application/json",
+            "cwt_claims_label": 15,
+            "issuer": "https://test-vectors.scitt-cose.invalid",
+            "subject": "urn:scitt-cose:test-vectors:v1:valid-es256"
+          },
+          "receipt": {
+            "alg": "ES256",
+            "alg_code": -7,
+            "vds_label": 395,
+            "vds": 1
+          }
+        },
+        "leaf_entry": "3ffa392b06d19b1532464da32e36aa7e2c8b555e0dda3e18154a481bfa2679c7",
+        "leaf_index": 2,
+        "tree_size": 8,
+        "inclusion_path": [
+          "ab76fae876146e6972f525923510e61f1b5f419061da443f3fc47da71d44997e",
+          "d8c99f69cd3e0d89d584dc860de6fd226fda244899ad1a9ca12ded9c6e62855b",
+          "7c0f09411a02969993feaad44b1e7414f8a30cee1a9583e6a31a2eea1122d11b"
+        ],
+        "reconstructed_root": "e1dba63622c67f39bc40bbbcfd62c22a4f3355aa72dff1044d6c5dba52448e61",
+        "statement_signature_valid": true,
+        "receipt_valid": true,
+        "result": "VALID"
+      }
+    },
+    {
+      "id": "fail-tampered-path",
+      "dir": "v1/fail-tampered-path",
+      "description": "Inclusion path with one flipped byte (first audit-path node). The reconstructed root no longer matches what the log signed; a verifier MUST reject. Statement is honest \u2014 the failure is receipt-only.",
+      "expected_result": "INVALID",
+      "failure_code": "TAMPERED_INCLUSION_PATH",
+      "expected": {
+        "payload_sha256": "374497661bfe6024e8acdbaead642cda20a60b5fd50586a6d5654a6a2c9aa5cd",
+        "protected_header": {
+          "statement": {
+            "alg": "EdDSA",
+            "alg_code": -8,
+            "content_type": "application/json",
+            "cwt_claims_label": 15,
+            "issuer": "https://test-vectors.scitt-cose.invalid",
+            "subject": "urn:scitt-cose:test-vectors:v1:fail-tampered-path"
+          },
+          "receipt": {
+            "alg": "EdDSA",
+            "alg_code": -8,
+            "vds_label": 395,
+            "vds": 1
+          }
+        },
+        "leaf_entry": "341df0ce74c5d59c84a122a646008caa1a27c709e350c817e98c16237145003a",
+        "leaf_index": 2,
+        "tree_size": 8,
+        "inclusion_path": [
+          "b6167b48a8130f79fbb8709f332945d387cdc7ad25713953f4cf3e08f5993e39",
+          "64d89f54777d5c2acd4ee10ed11e8759f2e5fc77eb8c02b356051dd9bff2c613",
+          "4ccdae78b9b9af9803ac82b2b442c9990c01d28b1af924a7de4368881169367d"
+        ],
+        "reconstructed_root": null,
+        "statement_signature_valid": true,
+        "receipt_valid": false,
+        "result": "INVALID",
+        "failure_code": "TAMPERED_INCLUSION_PATH"
+      }
+    },
+    {
+      "id": "fail-unsupported-vds",
+      "dir": "v1/fail-unsupported-vds",
+      "description": "Receipt whose protected vds (label 395) is 2, not 1 (RFC9162_SHA256). Proof and signature are otherwise honest, so the ONLY conformant rejection reason is the unsupported verifiable data structure \u2014 read from the protected header, never the unprotected one.",
+      "expected_result": "INVALID",
+      "failure_code": "UNSUPPORTED_VDS",
+      "expected": {
+        "payload_sha256": "b5b997112c8aff9ede41fc9f3074276d7ebe7c9dc35c2af2b4127f0ec7c186ee",
+        "protected_header": {
+          "statement": {
+            "alg": "EdDSA",
+            "alg_code": -8,
+            "content_type": "application/json",
+            "cwt_claims_label": 15,
+            "issuer": "https://test-vectors.scitt-cose.invalid",
+            "subject": "urn:scitt-cose:test-vectors:v1:fail-unsupported-vds"
+          },
+          "receipt": {
+            "alg": "EdDSA",
+            "alg_code": -8,
+            "vds_label": 395,
+            "vds": 2
+          }
+        },
+        "leaf_entry": "ee728ba89fc45b23888702bb61e43d753eca60f6c38c145ad32f3b45d7930ad2",
+        "leaf_index": 2,
+        "tree_size": 8,
+        "inclusion_path": [
+          "0c294b4f6b48c04d904362bec9a7ce4e35b81dfe5ad374a312970fc9a760b8ac",
+          "af1b8a36645aaa3d9c0c8cf6e2a55538006a74d0ff7d8b691e6ee7a620da72fa",
+          "0e0ce47ce7debfadf8380c055109ce0991919a7135b05f973c6bf9e5afd07af1"
+        ],
+        "reconstructed_root": null,
+        "statement_signature_valid": true,
+        "receipt_valid": false,
+        "result": "INVALID",
+        "failure_code": "UNSUPPORTED_VDS"
+      }
+    },
+    {
+      "id": "fail-bad-statement-sig",
+      "dir": "v1/fail-bad-statement-sig",
+      "description": "Signed Statement whose signature byte was flipped. The receipt is minted over the digest of the TAMPERED bytes and verifies \u2014 isolating the failure to the statement signature alone.",
+      "expected_result": "INVALID",
+      "failure_code": "BAD_STATEMENT_SIGNATURE",
+      "expected": {
+        "payload_sha256": "17591d8abea5cad14242167727aee7130d104b211b6779b2ce6c1196aac5460b",
+        "protected_header": {
+          "statement": {
+            "alg": "EdDSA",
+            "alg_code": -8,
+            "content_type": "application/json",
+            "cwt_claims_label": 15,
+            "issuer": "https://test-vectors.scitt-cose.invalid",
+            "subject": "urn:scitt-cose:test-vectors:v1:fail-bad-statement-sig"
+          },
+          "receipt": {
+            "alg": "EdDSA",
+            "alg_code": -8,
+            "vds_label": 395,
+            "vds": 1
+          }
+        },
+        "leaf_entry": "0dea38958b8f83f3fb0a4e7626ca0919e6814fdb3c34ec1c1a301622aa1c99d6",
+        "leaf_index": 2,
+        "tree_size": 8,
+        "inclusion_path": [
+          "26446cb4dead0680b3394c81bbe42e7afedbc1b064c015a5d6cb2a33e55d2a61",
+          "e2d5b5aa93e16ee2721cbd06758f04925d251e143f013f651313957492ffa2b5",
+          "776d67c33424280e99e16a7213cdcc6f0281a4f098e46f1d24a0f78769d516d3"
+        ],
+        "reconstructed_root": "e5b5647171f5b9b35072b62e8243fbb13e43845d9374ca08c7272cc27ac41f88",
+        "statement_signature_valid": false,
+        "receipt_valid": true,
+        "result": "INVALID",
+        "failure_code": "BAD_STATEMENT_SIGNATURE"
+      }
+    }
+  ]
+}
