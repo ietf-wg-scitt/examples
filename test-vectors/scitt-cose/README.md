@@ -26,7 +26,10 @@ These vectors are authoritative *in place* here — a verifier in any future yea
 can review and reproduce them without fetching anything from the source repo.
 The pinned source is named only as **provenance**, so the vendored copy can be
 diffed against its origin and any drift detected; it is **not** a location the
-WG repo needs to fetch from. To confirm the bytes are unmodified:
+WG repo needs to fetch from. To confirm the bytes are unmodified (the
+[`.gitattributes`](.gitattributes) in this directory pins every vector file as
+non-normalized, so this reproduces byte-for-byte on every platform — including a
+`core.autocrlf=true` checkout):
 
 ```bash
 cd test-vectors/scitt-cose
@@ -39,7 +42,7 @@ expected negative-result code, so a reviewer sees them from the manifest
 without opening each `expected.json`. The canonical per-vector source of truth
 remains each vector's `expected.json` (itself vendored and checksum-pinned).
 
-## One-command verify
+## One-command verify (from the repo root)
 
 The reference runner ships in **scitt-cose ≥ 0.1.0** and reads this directory's
 manifest directly:

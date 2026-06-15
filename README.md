@@ -42,9 +42,14 @@ test-vectors/scitt-cose/SHA256SUMS       digest of every byte file
 test-vectors/scitt-cose/v1/<id>/...      statement.cose, receipt.cose, payload.bin, keys, expected.json
 ```
 
-Verify:
+Verify (all commands from the repo root):
 
 ```
-cd test-vectors/scitt-cose && shasum -a 256 -c SHA256SUMS
-pip install "scitt-cose>=0.1.0" && python -m scitt_cose.vectors test-vectors/scitt-cose
+# Integrity — SHA256SUMS paths are relative to the suite dir, so check inside it
+# (the subshell keeps the cd from leaking into the next command):
+( cd test-vectors/scitt-cose && shasum -a 256 -c SHA256SUMS )
+
+# Conformance runner:
+pip install "scitt-cose>=0.1.0"
+python -m scitt_cose.vectors test-vectors/scitt-cose
 ```
