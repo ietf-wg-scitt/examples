@@ -18,3 +18,38 @@ receipts/cose-hash-envelope-0-datatrail-mmr.receipt
 transparent-statements/cose-hash-envelope-0-with-microsoft-mst-receipt.scitt
 transparent-statements/cose-hash-envelope-0-with-microsoft-mst-and-datatrails-mmr-receipts.scitt
 ```
+
+# scitt-cose cross-implementation test vectors (v1)
+
+A self-contained, append-only set of SCITT Signed Statement + COSE Receipt
+(RFC 9162 SHA-256) conformance vectors — two positive (EdDSA, ES256) and three
+negative, each isolating one failure (`TAMPERED_INCLUSION_PATH`,
+`UNSUPPORTED_VDS`, `BAD_STATEMENT_SIGNATURE`). Every vector ships the
+statement/receipt bytes, keys, the decoded protected-header expectations, the
+expected root/path material, and the explicit negative outcome.
+
+The bytes are vendored byte-identical from the pinned, append-only source
+`action-state-group/scitt-cose` tag **v0.1.1**
+(`41811d1e3d9b32d000b1e7f26cafdb116f572167`) and carry a `SHA256SUMS` so the
+copy can be verified in place and diffed against its origin. A reference runner
+ships in `scitt-cose >= 0.1.0`; a clean-room Go runner exercises the same
+manifest in the source repo's CI.
+
+```
+test-vectors/scitt-cose/README.md       provenance, verify steps, field reference
+test-vectors/scitt-cose/manifest.json   index with decoded headers + negative codes inline
+test-vectors/scitt-cose/SHA256SUMS       digest of every byte file
+test-vectors/scitt-cose/v1/<id>/...      statement.cose, receipt.cose, payload.bin, keys, expected.json
+```
+
+Verify (all commands from the repo root):
+
+```
+# Integrity — SHA256SUMS paths are relative to the suite dir, so check inside it
+# (the subshell keeps the cd from leaking into the next command):
+( cd test-vectors/scitt-cose && shasum -a 256 -c SHA256SUMS )
+
+# Conformance runner:
+pip install "scitt-cose>=0.1.0"
+python -m scitt_cose.vectors test-vectors/scitt-cose
+```
