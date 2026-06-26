@@ -3,10 +3,10 @@
   "stability": "append-only",
   "provenance": {
     "source_repo": "https://github.com/action-state-group/scitt-cose",
-    "release_tag": "v0.1.1",
-    "commit": "41811d1e3d9b32d000b1e7f26cafdb116f572167",
+    "release_tag": "main (post-v0.1.1)",
+    "commit": "7796e7ef82955e28646195fe439be1a6fe0ad092",
     "upstream_path": "test-vectors/",
-    "note": "The v1/ bytes and SHA256SUMS in this directory are vendored byte-identical from the pinned source above; verify with `shasum -a 256 -c SHA256SUMS`. This manifest is a superset of the upstream manifest: the per-vector `expected` block below inlines the decoded protected-header expectations and negative-result codes for review convenience. The canonical per-vector source of truth remains each vector's expected.json (which is itself vendored and checksum-pinned)."
+    "note": "The v1/ bytes and SHA256SUMS in this directory are the public verification subset of the pinned source above (private generation keys *.test-private are omitted \u2014 they are not needed to verify any vector). Verify with `shasum -a 256 -c SHA256SUMS`. This manifest is a superset of the upstream manifest: the per-vector `expected` block below inlines the decoded protected-header expectations and negative-result codes for review convenience. The canonical per-vector source of truth remains each vector's expected.json (which is itself vendored and checksum-pinned)."
   },
   "leaf_entry_definition": "SHA-256 digest of the complete Signed Statement (COSE_Sign1) bytes, hex-encoded",
   "tree_construction": "tree_size=8; statement digest at leaf_index=2; filler leaf i = SHA-256('scitt-cose test vectors v1 :: <vector-id> :: filler leaf <i>'); leaves in index order; RFC 9162 SHA-256 tree",

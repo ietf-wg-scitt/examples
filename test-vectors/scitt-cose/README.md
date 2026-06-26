@@ -12,14 +12,16 @@ acceptance.
 
 ## Provenance (these bytes are vendored, not fetched)
 
-The `v1/` bytes and [`SHA256SUMS`](SHA256SUMS) in this directory are vendored
-**byte-identical** from a pinned, append-only source:
+The `v1/` bytes and [`SHA256SUMS`](SHA256SUMS) in this directory are the
+**public verification subset** of a pinned, append-only source (private
+generation keys `*.test-private` are omitted — they are not needed to verify
+any vector):
 
 | | |
 |---|---|
 | Canonical source | <https://github.com/action-state-group/scitt-cose> |
-| Release tag | **v0.1.1** |
-| Commit | **`41811d1e3d9b32d000b1e7f26cafdb116f572167`** |
+| Release tag | **v0.1.1** (base) |
+| Commit | **`7796e7ef82955e28646195fe439be1a6fe0ad092`** |
 | Upstream path | `test-vectors/` |
 
 These vectors are authoritative *in place* here — a verifier in any future year
@@ -33,7 +35,7 @@ non-normalized, so this reproduces byte-for-byte on every platform — including
 
 ```bash
 cd test-vectors/scitt-cose
-shasum -a 256 -c SHA256SUMS        # 40/40 OK
+shasum -a 256 -c SHA256SUMS        # 30/30 OK
 ```
 
 `manifest.json` here is a **superset** of the upstream manifest: each vector's
@@ -68,7 +70,6 @@ v1/<vector-id>/
   receipt.cose         COSE Receipt bytes
   issuer-key.pub       PEM public key for the statement signature
   log-key.pub          PEM public key of the (simulated) transparency log
-  *.test-private       the TEST-ONLY private keys used to mint the vector
   expected.json        every value a verifier needs + the expected verdict
 ```
 
@@ -128,6 +129,6 @@ rejected).
 
 ## Keys
 
-All keys were freshly generated for this vector set, are committed here in
-full (including private halves, named `*.test-private`), are **TEST-ONLY**, and
-are never used anywhere else. Do not use them for anything.
+All keys were freshly generated for this vector set and are **TEST-ONLY** — never
+used anywhere else. The public halves (`*.pub`) are included here; the private
+generation keys (`*.test-private`) are not published in this WG repo.
