@@ -1,0 +1,156 @@
+{
+  "scope": "Local reproducible synthetic fixture, not a deployed SCITT implementation",
+  "cryptography": {
+    "algorithm": "Ed25519",
+    "cose_algorithm": -19,
+    "version": "50.0.1",
+    "keys": "Fixed public TEST-ONLY seeds 0x11*32 and 0x22*32",
+    "public_keys_hex": {
+      "https://producer.example | kid=producer-demo": "d04ab232742bb4ab3a1368bd4615e4e6d0224ab71a016baf8520a332c9778737",
+      "https://auditor.example | kid=auditor-demo": "a09aa5f47a6759802ff955f8dc2d2a14a5c99d23be97f864127ff9383455a4f0"
+    }
+  },
+  "identity_profile": "demo-sha256-tagged-sign1-empty-unprotected-v1",
+  "statement_ids": {
+    "S1": "sha256:a6eeb1c732ab5cc4528a5c42d3513cdea9932433b80abda31fd99e202fb5a350",
+    "S2": "sha256:956bfbc8b5d92d1da3dacf79b275c07f6f61122e5cd1fe2bbf789b4fe10cc3c9",
+    "S3": "sha256:244ee6f36e7d3034ad764f2d39ae0da87f7a4335be5a4d17eb99494e551f489a",
+    "A": "sha256:ecdf6d3d87f6c26eb04f984eb7d02add0ce412e5a6ccdd9afe6c14a403c1d867"
+  },
+  "failure_mode": {
+    "same_iss_sub": true,
+    "later_iat": true,
+    "naive_replacement": "S3",
+    "naive_selected_id": "sha256:244ee6f36e7d3034ad764f2d39ae0da87f7a4335be5a4d17eb99494e551f489a",
+    "exact_coverage_result": "NOT_IN_DECLARED_COVERAGE"
+  },
+  "membership_results": {
+    "exact_S2": "DECLARED_MEMBER_AVAILABLE",
+    "exact_S3": "NOT_IN_DECLARED_COVERAGE",
+    "partial_S3": "UNRESOLVED_UNLISTED_TARGET",
+    "exact_S2_unavailable": "DECLARED_MEMBER_UNAVAILABLE",
+    "missing_or_unknown_mode": "UNRESOLVED_COVERAGE_MODE",
+    "B_direct_A": "DECLARED_MEMBER_AVAILABLE",
+    "B_transitive_S1": "NOT_IN_DECLARED_COVERAGE"
+  },
+  "unsigned_carrier_experiment": {
+    "description": "Arbitrary unsigned metadata placeholders; no TS receipts or registrations",
+    "raw_sha256": [
+      "956bfbc8b5d92d1da3dacf79b275c07f6f61122e5cd1fe2bbf789b4fe10cc3c9",
+      "afd52e5ee848fd1b837f41049a604b785953e3613ae2f7c0473bccc9cc93dd6b",
+      "8c54b2c5af70334862be647fd6f1f2576526e46fa296cb389e933cd762e8571c"
+    ],
+    "stable_projected_id": "sha256:956bfbc8b5d92d1da3dacf79b275c07f6f61122e5cd1fe2bbf789b4fe10cc3c9"
+  },
+  "supported_claim": "Pinned-key signature authenticates an exact or partial direct-coverage declaration; local identifiers bind referenced record bytes",
+  "unsupported_claims": [
+    "Truth or adequacy of the audit",
+    "Execution or outcome occurred",
+    "Issuer authority or identity beyond local key pinning",
+    "Records were received or retained by a required party",
+    "A missing record does not exist",
+    "Global or time-bounded completeness",
+    "Verified TS registration, inclusion, time, consistency, or receipt validity",
+    "Coverage transfer through correction or other links",
+    "General SCITT, COSE, or CBOR conformance"
+  ],
+  "checks_passed": 24,
+  "checks": [
+    {
+      "name": "S1_real_ed25519_signature_verifies",
+      "passed": true
+    },
+    {
+      "name": "S2_real_ed25519_signature_verifies",
+      "passed": true
+    },
+    {
+      "name": "S3_real_ed25519_signature_verifies",
+      "passed": true
+    },
+    {
+      "name": "A_real_ed25519_signature_verifies",
+      "passed": true
+    },
+    {
+      "name": "same_iss_sub_latest_substitutes_S3",
+      "passed": true
+    },
+    {
+      "name": "exact_declaration_matches_available_S2",
+      "passed": true
+    },
+    {
+      "name": "exact_declaration_excludes_S3",
+      "passed": true
+    },
+    {
+      "name": "partial_nonmembership_remains_unresolved",
+      "passed": true
+    },
+    {
+      "name": "missing_mode_remains_unresolved",
+      "passed": true
+    },
+    {
+      "name": "unknown_mode_remains_unresolved",
+      "passed": true
+    },
+    {
+      "name": "missing_declared_target_is_unavailable_not_excluded",
+      "passed": true
+    },
+    {
+      "name": "tampered_digest_fails_audit_signature",
+      "passed": true
+    },
+    {
+      "name": "tampered_list_fails_audit_signature",
+      "passed": true
+    },
+    {
+      "name": "tampered_mode_fails_audit_signature",
+      "passed": true
+    },
+    {
+      "name": "changed_target_bytes_fail_id_binding",
+      "passed": true
+    },
+    {
+      "name": "changed_target_payload_fails_signature",
+      "passed": true
+    },
+    {
+      "name": "unsigned_carrier_metadata_changes_raw_hash",
+      "passed": true
+    },
+    {
+      "name": "unsigned_carrier_metadata_preserves_profile_id",
+      "passed": true
+    },
+    {
+      "name": "unsigned_carrier_metadata_preserves_signature",
+      "passed": true
+    },
+    {
+      "name": "unsigned_coverage_substitution_leaves_signature_valid",
+      "passed": true
+    },
+    {
+      "name": "evaluator_ignores_unsigned_coverage_substitution",
+      "passed": true
+    },
+    {
+      "name": "alternate_indefinite_outer_encoding_is_out_of_profile",
+      "passed": true
+    },
+    {
+      "name": "B_directly_lists_A",
+      "passed": true
+    },
+    {
+      "name": "B_does_not_inherit_A_targets",
+      "passed": true
+    }
+  ]
+}

@@ -53,3 +53,8 @@ Verify (all commands from the repo root):
 pip install "scitt-cose>=0.1.0"
 python -m scitt_cose.vectors test-vectors/scitt-cose
 ```
+
+# Audit coverage use case
+
+[Exact declared audit coverage](use-cases/audit-coverage/README.md) describes why an audit over S1 and S2 does not automatically cover a later same-subject S3. It includes a local COSE demonstrator with explicit expected results and limitations.
+
