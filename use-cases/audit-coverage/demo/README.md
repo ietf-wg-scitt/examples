@@ -16,13 +16,7 @@ dependency, network access, service, or account is needed.
 python3 run_demo.py --out result.json
 ```
 
-In the preparation environment, the installed dependency is available through:
-
-```sh
-"$CODEX_PRIMARY_RUNTIME_PYTHON" run_demo.py --out result.json
-```
-
-The checked run in `result.json` contains **24 passing checks**. A failed check
+The checked run in `result.json` contains **29 passing checks**. A failed check
 raises an exception and prevents generation of a success result. Private key
 seeds `0x11 * 32` and `0x22 * 32` are intentionally public, **test-only** inputs.
 Do not use them outside this fixture.
@@ -35,6 +29,12 @@ Claims (`iss`, `sub`, `iat`). Verification pins public keys by `(iss, kid)`;
 it does not validate issuer authority. The audit relation, identity-profile
 name, target list, and `exact`/`partial` mode are inside the **signed payload**.
 All vocabulary prefixed with `demo` is local and unregistered.
+
+A signed payload that repeats a member name in any JSON object is refused,
+because a first-wins and a last-wins parser read different documents from the
+same bytes. A target list is read only when it is a list whose every entry has
+this profile's identifier syntax: `sha256:` followed by 64 lowercase hexadecimal
+digits. No entry is normalized.
 
 The identity profile is also explicitly local:
 
@@ -69,6 +69,10 @@ signature algorithms require an explicitly defined profile before comparison.
 | Inject a broader list into unsigned metadata | The signature still verifies; the evaluator reads the signed payload and excludes S3. |
 | Append different unsigned carrier metadata | Raw carrier hashes differ; projected statement identity and signature verification stay the same. |
 | B directly covers A; A directly covers S1 | B's declaration does not acquire S1 through transitivity. |
+| Damage one entry of an exact target list | The list is not readable; no membership and no exclusion is inferred for any target. |
+| Write S2's entry in upper-case hex digits or under another prefix, or put a number in the list | The same result: the entry is outside this profile's identifier syntax. |
+| Give the targets as one string, or as an object with an identifier as a member name | Scope remains unresolved; the string is not searched and the member names are not read as a list. |
+| Repeat a member name in a signed payload | The signature verifies and the payload is refused. |
 
 The carrier experiment uses arbitrary unsigned metadata named as placeholders.
 **It generates and verifies no Transparency Service receipts and performs no
@@ -96,3 +100,19 @@ contract must be justified separately.
 Relevant standards background: [RFC 9943](https://www.rfc-editor.org/rfc/rfc9943),
 [RFC 9052](https://www.rfc-editor.org/rfc/rfc9052), and
 [RFC 9864](https://www.rfc-editor.org/rfc/rfc9864).
+
+## Revision of 14 November 2026
+
+The last four rows of the table above were added, with five checks. Before
+this revision the fixture answered that a statement was outside the declared
+coverage when its list entry was damaged or written in upper-case hex digits,
+searched a string of targets as text, read the member names of an object as a
+list, and read the last of two members with one name.
+
+The damaged-entry case follows case C13 of
+[draft-gruszka-scitt-statement-identification-03](https://datatracker.ietf.org/doc/html/draft-gruszka-scitt-statement-identification-03),
+where a reference that is not well-formed is not usable and the match is
+INDETERMINATE. The refusal of a repeated member name follows finding F6 of the
+[Joint Interoperability Report](https://doi.org/10.5281/zenodo.23333369),
+found by Konrad Gruszka. The statement identifiers and the first 24 checks are
+unchanged.

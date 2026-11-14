@@ -31,7 +31,9 @@
     "exact_S2_unavailable": "DECLARED_MEMBER_UNAVAILABLE",
     "missing_or_unknown_mode": "UNRESOLVED_COVERAGE_MODE",
     "B_direct_A": "DECLARED_MEMBER_AVAILABLE",
-    "B_transitive_S1": "NOT_IN_DECLARED_COVERAGE"
+    "B_transitive_S1": "NOT_IN_DECLARED_COVERAGE",
+    "exact_S2_damaged_entry": "UNRESOLVED_TARGET_LIST",
+    "targets_not_a_list": "UNRESOLVED_TARGET_LIST"
   },
   "unsigned_carrier_experiment": {
     "description": "Arbitrary unsigned metadata placeholders; no TS receipts or registrations",
@@ -54,7 +56,7 @@
     "Coverage transfer through correction or other links",
     "General SCITT, COSE, or CBOR conformance"
   ],
-  "checks_passed": 24,
+  "checks_passed": 29,
   "checks": [
     {
       "name": "S1_real_ed25519_signature_verifies",
@@ -150,6 +152,26 @@
     },
     {
       "name": "B_does_not_inherit_A_targets",
+      "passed": true
+    },
+    {
+      "name": "damaged_list_entry_is_unresolved_not_excluded",
+      "passed": true
+    },
+    {
+      "name": "damaged_list_entry_leaves_other_targets_unresolved",
+      "passed": true
+    },
+    {
+      "name": "list_entry_outside_identifier_syntax_is_unresolved",
+      "passed": true
+    },
+    {
+      "name": "targets_not_a_list_is_unresolved",
+      "passed": true
+    },
+    {
+      "name": "duplicate_member_name_is_refused",
       "passed": true
     }
   ]

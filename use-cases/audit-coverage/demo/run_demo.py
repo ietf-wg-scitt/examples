@@ -144,6 +144,14 @@ def fields(carrier):
     return protected, unprotected, payload, signature
 
 
+def reject_duplicate_names(pairs):
+    """json.loads keeps the last of two members with one name; another parser keeps the first."""
+    names = [name for name, _ in pairs]
+    if len(names) != len(set(names)):
+        raise ValueError("Duplicate JSON member name outside this local profile")
+    return dict(pairs)
+
+
 def verify(carrier):
     protected, _, payload, signature = fields(carrier)
     headers = decode(protected)
@@ -153,7 +161,7 @@ def verify(carrier):
     # Local public-key pinning only; issuer authorization is not established.
     KEYS[(claims[1], headers[4])].verify(
         signature, encode(["Signature1", protected, b"", payload]))
-    return claims, json.loads(payload)
+    return claims, json.loads(payload, object_pairs_hook=reject_duplicate_names)
 
 
 def projection(carrier):
@@ -169,6 +177,12 @@ def projection(carrier):
 
 def statement_id(carrier):
     return "sha256:" + hashlib.sha256(projection(carrier)).hexdigest()
+
+
+def well_formed_id(value):
+    """This profile's identifier syntax only: "sha256:" and 64 lowercase hex digits."""
+    return (isinstance(value, str) and len(value) == 71 and value.startswith("sha256:")
+            and all(digit in "0123456789abcdef" for digit in value[7:]))
 
 
 def coverage(mode, targets):
@@ -187,7 +201,11 @@ def inspect_coverage(audit, target_id, available):
     mode = declaration.get("mode")
     if mode not in ("exact", "partial"):
         return "UNRESOLVED_COVERAGE_MODE"
-    if target_id not in declaration["targets"]:
+    targets = declaration.get("targets")
+    if not isinstance(targets, list) or not all(well_formed_id(x) for x in targets):
+        # An entry that cannot be read may be the one that named the target.
+        return "UNRESOLVED_TARGET_LIST"
+    if target_id not in targets:
         return ("NOT_IN_DECLARED_COVERAGE" if mode == "exact"
                 else "UNRESOLVED_UNLISTED_TARGET")
     if target_id not in available:
@@ -322,6 +340,44 @@ def run():
     check("B_directly_lists_A", direct_a == "DECLARED_MEMBER_AVAILABLE")
     check("B_does_not_inherit_A_targets", transitive_s1 == "NOT_IN_DECLARED_COVERAGE")
 
+    # One entry of an exact list loses its last byte: the list is no longer readable.
+    damaged = sign(AUDITOR, AUDITOR_ISS, "urn:example:audit:damaged-entry", t + 10,
+                   coverage("exact", [ids["S1"], ids["S2"][:-2]]))
+    damaged_s2 = inspect_coverage(damaged, ids["S2"], available)
+    check("damaged_list_entry_is_unresolved_not_excluded",
+          damaged_s2 == "UNRESOLVED_TARGET_LIST")
+    check("damaged_list_entry_leaves_other_targets_unresolved",
+          all(inspect_coverage(damaged, ids[name], available) == "UNRESOLVED_TARGET_LIST"
+              for name in ("S1", "S3")))
+    # S2's entry in upper-case hex digits, under another prefix, and as a number.
+    digits = ids["S2"][7:]
+    check("list_entry_outside_identifier_syntax_is_unresolved", all(
+        inspect_coverage(sign(AUDITOR, AUDITOR_ISS, "urn:example:audit:entry-syntax", t + 10,
+                              coverage("exact", [ids["S1"], entry])), ids["S2"], available)
+        == "UNRESOLVED_TARGET_LIST"
+        for entry in ("sha256:" + digits.upper(), "sha512:" + digits, 42)))
+    # The targets as one string, and as an object with S2's identifier as a member name.
+    string_targets, keyed_targets = (
+        inspect_coverage(sign(AUDITOR, AUDITOR_ISS, "urn:example:audit:not-a-list", t + 10,
+                              coverage("exact", shape)), ids["S2"], available)
+        for shape in (ids["S2"], {ids["S2"]: True}))
+    check("targets_not_a_list_is_unresolved",
+          string_targets == keyed_targets == "UNRESOLVED_TARGET_LIST")
+
+    # A's payload with a second "targets" member put before the original one,
+    # then signed by the auditor's key.
+    twice = a_payload.replace(
+        b'"targets":', b'"targets":["' + ids["S1"].encode() + b'"],"targets":', 1)
+    duplicate = encode(Tag(18, [a_protected, {}, twice, AUDITOR.sign(
+        encode(["Signature1", a_protected, b"", twice]))]))
+    try:
+        verify(duplicate)
+    except ValueError as refused:  # Raised after the signature verified.
+        duplicate_rejected = str(refused).startswith("Duplicate JSON member name")
+    else:
+        duplicate_rejected = False
+    check("duplicate_member_name_is_refused", duplicate_rejected)
+
     return {
         "scope": "Local reproducible synthetic fixture, not a deployed SCITT implementation",
         "cryptography": {"algorithm": "Ed25519", "cose_algorithm": ALGORITHM,
@@ -338,7 +394,9 @@ def run():
         "membership_results": {"exact_S2": correct_s2, "exact_S3": correct_s3,
                                "partial_S3": partial_s3, "exact_S2_unavailable": missing_s2,
                                "missing_or_unknown_mode": "UNRESOLVED_COVERAGE_MODE",
-                               "B_direct_A": direct_a, "B_transitive_S1": transitive_s1},
+                               "B_direct_A": direct_a, "B_transitive_S1": transitive_s1,
+                               "exact_S2_damaged_entry": damaged_s2,
+                               "targets_not_a_list": string_targets},
         "unsigned_carrier_experiment": {
             "description": "Arbitrary unsigned metadata placeholders; no TS receipts or registrations",
             "raw_sha256": raw_hashes, "stable_projected_id": ids["S2"]},

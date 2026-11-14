@@ -2,7 +2,7 @@
 
 Author: Mikhail Sergeev
 
-Status: Local COSE demonstrator; no deployment or Transparency Service interoperability results. Revised 11 October 2026.
+Status: Local COSE demonstrator; no deployment or Transparency Service interoperability results. Revised 14 November 2026.
 
 ## Consumer and failure mode
 
@@ -28,10 +28,12 @@ Each target needs an explicit identity profile, including the hash preimage and 
 | A's signed list, target digest or scope mode is altered | Signature verification fails; no authenticated scope result |
 | A broader list is injected into unsigned metadata | Ignore it; A's authenticated scope still excludes S3 |
 | Only unsigned carrier metadata changes | Original target identity and declared membership unchanged under the selected profile |
+| A's targets are not a list, or an entry is not a well-formed identifier | No membership and no exclusion inferred for any target |
+| A's signed payload repeats a member name | The payload is refused; no authenticated scope result |
 
 ## Local implementation and interoperability question
 
-The [fixture](demo/README.md) uses [COSE_Sign1](https://www.rfc-editor.org/rfc/rfc9052.html#section-4.4)/Ed25519, with the coverage declaration in A's signed payload. The deliberately incorrect consumer chooses S3 while A's signature remains valid; the exact-reference consumer excludes S3. Re-execution on 11 October reproduced all 24 checks and the saved [result](demo/result.json) byte for byte. This is another execution of the same source, not an independently authored implementation.
+The [fixture](demo/README.md) uses [COSE_Sign1](https://www.rfc-editor.org/rfc/rfc9052.html#section-4.4)/Ed25519, with the coverage declaration in A's signed payload. The deliberately incorrect consumer chooses S3 while A's signature remains valid; the exact-reference consumer excludes S3. Re-execution on 14 November reproduced all 29 checks and the saved [result](demo/result.json) byte for byte. This is another execution of the same source, not an independently authored implementation.
 
 Its local SHA-256 identity profile preserves protected-header, inline payload and signature bytes while projecting the unprotected map to empty. The encoding restrictions are documented; this is not a universal COSE identifier. Unsigned carrier additions are synthetic: no TS registration or receipt verification is exercised.
 
