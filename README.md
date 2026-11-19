@@ -53,3 +53,31 @@ Verify (all commands from the repo root):
 pip install "scitt-cose>=0.1.0"
 python -m scitt_cose.vectors test-vectors/scitt-cose
 ```
+
+# scitt-rfc9162 hash-tree and inclusion-path test vectors (v1)
+
+A self-contained, append-only set of **RFC 9162 SHA-256 hash-tree and
+inclusion-path** vectors: two positive and three negative, each negative
+isolating one failure (`INVALID_INCLUSION_PATH`, `INVALID_TREE_SIZE`,
+`INVALID_LEAF_INDEX`).
+
+This set covers the tree layer only, and deliberately ships **no COSE bytes**, so
+a reader can check the fold arithmetic with the standard library and no COSE
+library. It is complementary to `test-vectors/scitt-cose` above, which covers the
+COSE envelope and receipt layer; neither substitutes for the other.
+
+Files:
+
+```
+test-vectors/scitt-rfc9162/README.md        what each field means, and the fold rule
+test-vectors/scitt-rfc9162/manifest.json    index with every expected block inlined
+test-vectors/scitt-rfc9162/SHA256SUMS       every vector file, byte-for-byte
+test-vectors/scitt-rfc9162/v1/<vector-id>/expected.json
+```
+
+Verification needs no code from the contributing project: for each vector,
+`SHA-256(leaf_input)` must equal `digest_hex`; folding `inclusion_path` over
+`leaf_index` with `tree_size` per RFC 9162 must equal `root_true` for the `VALID`
+vectors, and must differ for the three `fail-*` vectors. A verifier that
+*accepts* any `fail-*` vector is a finding about one of us — please open an issue
+rather than staying silent.
