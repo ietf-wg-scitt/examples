@@ -1,0 +1,57 @@
+{
+  "naive_agrees": 3,
+  "records": [
+    {
+      "expected": "INVALID_INCLUSION_PATH",
+      "leaf_input_digest_matches": false,
+      "naive": "REJECT",
+      "naive_agrees": true,
+      "reconstructed_root": "99a2b1966982f3f0022ca514898cbb0644d187d653166267bb419dd0705b1293",
+      "strict": "REJECT",
+      "strict_agrees": true,
+      "vector": "fail-tampered-path"
+    },
+    {
+      "expected": "INVALID_LEAF_INDEX",
+      "leaf_input_digest_matches": false,
+      "naive": "REJECT",
+      "naive_agrees": true,
+      "reconstructed_root": "8c32e43777e652aa6c7cd72a555da9b202c41ed93b15fbdcf8aacbca761d6d8c",
+      "strict": "REJECT",
+      "strict_agrees": true,
+      "vector": "fail-wrong-leaf-index"
+    },
+    {
+      "expected": "INVALID_TREE_SIZE",
+      "leaf_input_digest_matches": false,
+      "naive": "REJECT",
+      "naive_agrees": true,
+      "reconstructed_root": "d7545c8933ece7206e261be0b556875cbf152e9ea91f2b4cb7ca7e3b0743d9d2",
+      "strict": "REJECT",
+      "strict_agrees": true,
+      "vector": "fail-wrong-tree-size"
+    },
+    {
+      "expected": "VALID",
+      "leaf_input_digest_matches": false,
+      "naive": "REJECT",
+      "naive_agrees": false,
+      "reconstructed_root": "67b8802e549abe4085a95a216c1093b231df1c861e7b9f487a14df1b813ef990",
+      "strict": "VALID",
+      "strict_agrees": true,
+      "vector": "valid-tree4-index0"
+    },
+    {
+      "expected": "VALID",
+      "leaf_input_digest_matches": false,
+      "naive": "REJECT",
+      "naive_agrees": false,
+      "reconstructed_root": "7437f94011c823b36de71de6d7f1b6c027204b65783292d27e31059f6bb61daa",
+      "strict": "VALID",
+      "strict_agrees": true,
+      "vector": "valid-tree8-index2"
+    }
+  ],
+  "strict_agrees": 5,
+  "vectors": 5
+}

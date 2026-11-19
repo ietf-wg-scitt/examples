@@ -1,0 +1,8 @@
+922ab07e352c39a3dd93657fd5bed7122bff113a96daf542cf88e184878172fd  ./demo/result.json
+15ec018cc238bc27c2b5d042b4efb3a79d9bc5778f9843c7d0dcdac2eaa478d6  ./demo/run_demo.py
+0c89b3dad1dcbc6f151d17e8d0667a1bc2a103c440f799d038ea74be88679629  ./README.md
+7e2cea24732841d94f35e9c370e904c70f225c4c58717e12af4881c1a184cd67  ./vectors/fail-tampered-path.json
+ec4e908bbbf686f1c4c68dda809cb0ce79b2233daee16c5669a118450b28f2dd  ./vectors/fail-wrong-leaf-index.json
+9edee83fbdec2ac4a4f96dc86d2471468a0eb6ad39cab930770944b08c414a83  ./vectors/fail-wrong-tree-size.json
+29d9b19ba568c300c9a4c80bea4e3df0a51d875272dd528f5bb390cb789d44a6  ./vectors/valid-tree4-index0.json
+e8a2e0cb06e61a82edbc71f699ef4f054fd2246da5ddb874196d3c0f4e72e530  ./vectors/valid-tree8-index2.json
